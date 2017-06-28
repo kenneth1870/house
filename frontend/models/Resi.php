@@ -31,11 +31,23 @@ class Resi extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-         [['file'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg', 'maxFiles' => 4],
+        [['file'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg', 'maxFiles' => 4],
         [['valor', 'ubicacion'], 'integer'],
         [['caracteristicas'], 'string'],
         [['img'], 'string', 'max' => 512],
         ];
+    }
+
+    public function upload()
+    {
+        if ($this->validate()) { 
+            foreach ($this->file as $value) {
+                $value->saveAs('uploads/' . $value->baseName . '.' . $value->extension);
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
